@@ -1,6 +1,15 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
+    {
+      "type": "pli",
+      "request": "launch",
+      "name": "PL/I",
+      "program": "${workspaceFolder}/<insert-program-name-here>",
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": true
+    },
     {
       "type": "node",
       "request": "attach",
