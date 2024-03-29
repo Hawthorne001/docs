@@ -5,7 +5,6 @@ intro: 'You can write a script to handle failed deliveries of a {% data variable
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 topics:
   - Webhooks
@@ -232,10 +231,10 @@ async function fetchWebhookDeliveriesSince({lastWebhookRedeliveryTime, app}) {
   const iterator = app.octokit.paginate.iterator(
     "GET /app/hook/deliveries",
     {
-      per_page: 100,{% ifversion api-date-versioning %}
+      per_page: 100,
       headers: {
         "x-github-api-version": "{{ allVersions[currentVersion].latestApiVersion }}",
-      },{% endif %}
+      },
     }
   );
 

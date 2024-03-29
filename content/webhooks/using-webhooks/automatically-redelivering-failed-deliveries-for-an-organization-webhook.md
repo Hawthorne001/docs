@@ -5,7 +5,6 @@ intro: You can write a script to handle failed deliveries of an organization web
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 topics:
   - Webhooks
@@ -231,10 +230,10 @@ async function fetchWebhookDeliveriesSince({
     {
       org: organizationName,
       hook_id: hookId,
-      per_page: 100,{% ifversion api-date-versioning %}
+      per_page: 100,
       headers: {
         "x-github-api-version": "{{ allVersions[currentVersion].latestApiVersion }}",
-      },{% endif %}
+      },
     }
   );
 

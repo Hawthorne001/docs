@@ -9,7 +9,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 topics:
   - API
@@ -103,10 +102,10 @@ const octokit = new Octokit({ {% ifversion ghes %}
 const data = await octokit.paginate("GET /repos/{owner}/{repo}/issues", {
   owner: "octocat",
   repo: "Spoon-Knife",
-  per_page: 100,{% ifversion api-date-versioning %}
+  per_page: 100,
   headers: {
     "X-GitHub-Api-Version": "{{ allVersions[currentVersion].latestApiVersion }}",
-  },{% endif %}
+  },
 });
 
 console.log(data)
@@ -134,11 +133,11 @@ async function getPaginatedData(url) {
 
   while (pagesRemaining) {
     const response = await octokit.request(`GET ${url}`, {
-      per_page: 100,{% ifversion api-date-versioning %}
+      per_page: 100,
       headers: {
         "X-GitHub-Api-Version":
           "{{ allVersions[currentVersion].latestApiVersion }}",
-      },{% endif %}
+      },
     });
 
     const parsedData = parseData(response.data)
