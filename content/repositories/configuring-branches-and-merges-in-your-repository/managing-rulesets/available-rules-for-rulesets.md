@@ -10,11 +10,17 @@ topics:
 shortTitle: Available rules
 ---
 
-You can create rulesets to control how users can interact with selected branches and tags in a repository. When you create a ruleset, you can choose to enable or disable the rules described in the following sections.
+You can create branch or tag rulesets to control how users can interact with selected branches and tags in a repository. {% ifversion push-rulesets %}You can also create push rulesets to block pushes to a private or internal repository and that repository's entire fork network.{% endif %}
 
-When you create a ruleset, you can allow certain users to bypass the rules in the ruleset. This can be users with certain permissions, specific teams, or {% data variables.product.prodname_github_apps %}. For more information, see "[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)."
+When you create a ruleset, you can allow certain users to bypass the rules in the ruleset. This can be users with certain roles, specific teams, or {% data variables.product.prodname_github_apps %}.
 
-For more information on creating rulesets, see {% ifversion ghec %}"[AUTOTITLE](/enterprise-cloud@latest/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization)" and {% endif %}"[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)."
+{% ifversion push-rulesets %}
+
+For push rulesets, bypass permissions apply to a repository and the repository's entire fork network. {% data reusables.repositories.rulesets-push-rulesets-bypass-permissions %}
+
+{% endif %}
+
+For more information on creating rulesets and bypass permissions, see {% ifversion ghec %}"[AUTOTITLE](/enterprise-cloud@latest/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization)" and {% endif %}"[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)."
 
 ## Restrict creations
 
@@ -39,8 +45,7 @@ Before you can require a linear commit history, your repository must allow squas
 ## Require merge queue
 
 > [!NOTE]
-> - Configuring a merge queue via rulesets is in public beta and subject to change.
-> - This rule is not available for rulesets created at the organization level. For more information about creating rulesets at the repository level, see "[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)."
+> * This rule is not available for rulesets created at the organization level. For more information about creating rulesets at the repository level, see "[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)."
 
 You can require that merges must be performed with a merge queue at the repository level. For more information about merge queues, see "[AUTOTITLE](/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request-with-a-merge-queue#about-merge-queues)."
 
@@ -48,16 +53,16 @@ You can require that merges must be performed with a merge queue at the reposito
 
 You can configure various settings for your merge queue rule.
 
-- **Merge method**: Method to use when merging changes from pull requests.
-- **Build concurrency**: Limit the number of queued pull requests requesting checks and workflow runs at the same time.
-  - This setting controls when merge queue dispatches the `merge_group.checks_requested` webhook event, which triggers {% data variables.product.prodname_actions %} workflows that are configured to run on `merge_group`. For more information, see "[AUTOTITLE](/webhooks/webhook-events-and-payloads#merge_group)."
-  - For example, if there are 5 pull requests added to the queue and the build concurrency setting is 3, merge queue will dispatch the `checks_requested` event for the first 3 pull requeusts. When it receives a result for one of those pull requests, merge queue will dispatch the event for the 4th pull request, and so on.
-- **Minimum/maximum group size**: The number of pull requests that will be merged together in a group.
-- **Wait time to meet minimum group size (minutes)**: The time the merge queue will wait after the first pull request is added to the queue for the minimum group size to be met. After this time has elapsed, the minimum group size will be ignored and a smaller group will be merged.
-- **Require all queue entries to pass required checks**:
-    - When this setting is enabled, each item in the merge group must pass all required checks.
-    - When this setting is disabled, only the commit at the head of the merge group, i.e. the commit containing changes from all of the pull requests in the group, must pass its required checks to merge.
-- **Status check timeout (minutes)**: Maximum time for a required status check to report a conclusion. After this much time has elapsed, checks that have not reported a conclusion will be assumed to have failed
+* **Merge method**: Method to use when merging changes from pull requests.
+* **Build concurrency**: Limit the number of queued pull requests requesting checks and workflow runs at the same time.
+  * This setting controls when merge queue dispatches the `merge_group.checks_requested` webhook event, which triggers {% data variables.product.prodname_actions %} workflows that are configured to run on `merge_group`. For more information, see "[AUTOTITLE](/webhooks/webhook-events-and-payloads#merge_group)."
+  * For example, if there are 5 pull requests added to the queue and the build concurrency setting is 3, merge queue will dispatch the `checks_requested` event for the first 3 pull requeusts. When it receives a result for one of those pull requests, merge queue will dispatch the event for the 4th pull request, and so on.
+* **Minimum/maximum group size**: The number of pull requests that will be merged together in a group.
+* **Wait time to meet minimum group size (minutes)**: The time the merge queue will wait after the first pull request is added to the queue for the minimum group size to be met. After this time has elapsed, the minimum group size will be ignored and a smaller group will be merged.
+* **Require all queue entries to pass required checks**:
+    * When this setting is enabled, each item in the merge group must pass all required checks.
+    * When this setting is disabled, only the commit at the head of the merge group, i.e. the commit containing changes from all of the pull requests in the group, must pass its required checks to merge.
+* **Status check timeout (minutes)**: Maximum time for a required status check to report a conclusion. After this much time has elapsed, checks that have not reported a conclusion will be assumed to have failed
 
 {% endif %}
 
@@ -82,8 +87,8 @@ With both methods, we use the `verified_signature?` to confirm if a commit has a
 {% ifversion fpt or ghec %}
 
 > [!NOTE]
-> - If you have enabled vigilant mode in your account settings, which indicates that your commits will always be signed, any commits that {% data variables.product.prodname_dotcom %} identifies as "Partially verified" are permitted on branches that require signed commits. For more information about vigilant mode, see "[AUTOTITLE](/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits)."
-> - If a collaborator pushes an unsigned commit to a branch that requires commit signatures, the collaborator will need to rebase the commit to include a verified signature, then force push the rewritten commit to the branch.
+> * If you have enabled vigilant mode in your account settings, which indicates that your commits will always be signed, any commits that {% data variables.product.prodname_dotcom %} identifies as "Partially verified" are permitted on branches that require signed commits. For more information about vigilant mode, see "[AUTOTITLE](/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits)."
+> * If a collaborator pushes an unsigned commit to a branch that requires commit signatures, the collaborator will need to rebase the commit to include a verified signature, then force push the rewritten commit to the branch.
 
 {% else %}
 
@@ -131,7 +136,7 @@ Required status checks ensure that all required CI tests are passing before coll
 
 You can use the commit status API to allow external services to mark commits with an appropriate status. For more information, see "[AUTOTITLE](/rest/commits/statuses)."
 
-After enabling required status checks, all required status checks must pass before collaborators can merge changes into the branch or tag.
+After enabling required status checks, all required status checks must pass before collaborators can merge changes into the branch or tag. {% ifversion repo-rules-ignorecheck %} Optionally, you can select "Do not require status checks on creation" if you wish to allow branch creation regardless of the status check result. {% endif %}
 
 Any person or integration with write permissions to a repository can set the state of any status check in the repository, but in some cases you may only want to accept a status check from a specific {% data variables.product.prodname_github_app %}. When you add a required status check rule, you can select an app as the expected source of status updates. The app must be installed in the repository with the `statuses:write` permission, must have recently submitted a check run, and must be associated with a pre-existing required status check in the ruleset. If the status is set by any other person or integration, merging won't be allowed. If you select "any source", you can still manually verify the author of each status, listed in the merge box.
 
@@ -151,6 +156,18 @@ You can think of required status checks as being either "loose" or "strict." The
 
 For troubleshooting information, see "[AUTOTITLE](/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/troubleshooting-required-status-checks)."
 
+{% ifversion code-scanning-merge-protection-rulesets %}
+
+## Set {% data variables.product.prodname_code_scanning %} merge protection
+
+If your repositories are configured with {% data variables.product.prodname_code_scanning %}, you can use rulesets to prevent pull requests from being merged when one of the following conditions is met:
+
+{% data reusables.code-scanning.merge-protection-rulesets-conditions %}
+
+For more information, see "[AUTOTITLE](/code-security/code-scanning/managing-your-code-scanning-configuration/set-code-scanning-merge-protection)." For more general information about {% data variables.product.prodname_code_scanning %}, see "[AUTOTITLE](/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning)."
+
+{% endif %}
+
 ## Block force pushes
 
 You can prevent users from force pushing to the targeted branches or tags. This rule is enabled by default.
@@ -167,9 +184,11 @@ If a site administrator has blocked force pushes to the default branch only, you
 
 ## Require workflows to pass before merging
 
-> [!NOTE] This rule can only be configured in your organization settings. For more information, see "[AUTOTITLE](/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization)."
+{% data reusables.repositories.rulest-workflows-intro-paragraph %}
 
-You can require all changes made to a targeted branch to pass specified workflows before they can be merged.
+For more information about troubleshooting common ruleset workflow configuration settings, see "[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/troubleshooting-rules#troubleshooting-ruleset-workflows)."
+
+### Using a workflow file
 
 To use this rule, you must first create a workflow file. The workflow file needs to be in a repository that matches the visibility of the repositories you want to run it in. Specifically, a public workflow can run on any repository in your organization, an internal workflow can only run on internal and private repositories, and a private workflow can only run on private repositories. For more information, see "[AUTOTITLE](/actions/using-workflows/about-workflows)."
 
@@ -177,20 +196,25 @@ If the workflow file is in an internal or private repository and you want to use
 
 When you add this rule to a ruleset, in your organization settings, you specify the source repository and the workflow you want to enforce.
 
-> [!IMPORTANT]
->
-> - Workflows run by this rule only support the `pull_request`, `pull_request_target` and `merge_group` events. As a result, you must specify one or more of these events in the `on:` section of the workflow for the workflow to be run by a ruleset. Any filters you specify for the supported events are ignored - for example, `branches`, `branches-ignore`, `paths`, `types` and so on. The workflow is only, and always, triggered by the default activity types of the supported events.
->
->   | Event                 | Default activity types              |
->   | --------------------- | ----------------------------------- |
->   | `pull_request`        | `opened`, `synchronize`, `reopened` |
->   | `pull_request_target` | `opened`, `synchronize`, `reopened` |
->   | `merge_group`         | `checks_requested`                  |
->
-> - This rule should only be added to rulesets that target branches where all changes to the branch are performed by pull requests. The workflow will run as part of the pull request and merge queue experience. Applying this rule will block direct pushes. For this reason you should not apply this rule to a ruleset that targets all branches in the repository.
+### Using "Evaluate" mode for ruleset workflows
 
-A required workflow can block people from creating a repository, since a workflow can't run against a repository that's being initialized. To get around this, the ruleset either needs to have "Evaluate" as the enforcement status, or someone with bypass permissions needs to create the repository and bypass the branch protection.
+If a ruleset workflow runs in "Evaluate" mode and passes, you can set the ruleset workflow to "Active" mode and merge your pull request without triggering a new workflow run.
 
+If you open a pull request before you create the ruleset in "Evaluate" mode, you can still merge the pull request since the ruleset is not enforced.
+
+For more information about enforcement statuses, see "[AUTOTITLE](/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository#about-using-enforcement-statuses)."
+
+### Supported event triggers
+
+{% data reusables.repositories.ruleset-workflow-event-triggers %}
+
+### Targeting specific branches with your ruleset workflow
+
+Applying this rule will block direct pushes because the ruleset workflows run as part of the pull request and merge queue experience. For this reason you should not apply this rule to a ruleset that targets all branches in the repository.
+
+This rule should only be added to rulesets that target branches where all changes to the branch are performed by pull requests.
+
+{% ifversion repo-rules-ignorecheck %} Optionally, you can select "Do not require workflows checks on creation" if you wish to allow branch creation regardless of the status check result. {% endif %}
 {% endif %}
 
 {% ifversion repo-rules-enterprise %}
@@ -215,5 +239,27 @@ Metadata restrictions can increase friction for people contributing to a reposit
 If you use squash merges, you should be aware that metadata restrictions are evaluated before the merge, so all commits on the pull request must meet the requirements. For metadata restrictions that apply to committer emails, the pattern must also include `noreply@github.com` for squash merges to satisfy the restriction.
 
 When you add metadata restrictions to an existing branch or tag, the rules are enforced for new commits pushed to the branch or tag from that point forward, but they are not enforced against the existing history of the branch or tag.
+
+{% endif %}
+
+{% ifversion push-rulesets %}
+
+## Restrict file paths
+
+Prevent commits that include changes in specified file paths from being pushed to the repository.
+
+{% data reusables.repositories.rulesets-push-rules-path-example %}
+
+## Restrict file path length
+
+Prevent commits that include file paths that exceed a specified character limit from being pushed to the repository.
+
+## Restrict file extensions
+
+Prevent commits that include files with specified file extensions from being pushed to the repository.
+
+## Restrict file size
+
+Prevent commits that exceed a specified file size limit from being pushed to the repository.
 
 {% endif %}

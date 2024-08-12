@@ -35,9 +35,9 @@ If you have installed the {% data variables.product.prodname_codeql_cli %} in a 
 
 Before you can upload results to {% data variables.product.product_name %}, you must determine the best way to pass the {% data variables.product.prodname_github_app %} or {% data variables.product.pat_generic %} you created in the previous section to the {% data variables.product.prodname_codeql_cli %}. We recommend that you review your CI system's guidance on the secure use of a secret store. The {% data variables.product.prodname_codeql_cli %} supports:
 
-- Interfacing with a secret store using the `--github-auth-stdin` option (recommended).
-- Saving the secret in the environment variable `GITHUB_TOKEN` and running the CLI without including the `--github-auth-stdin` option.
-- For testing purposes you can pass the `--github-auth-stdin` command-line option and supply a temporary token via standard input.
+* Interfacing with a secret store using the `--github-auth-stdin` option (recommended).
+* Saving the secret in the environment variable `GITHUB_TOKEN` and running the CLI without including the `--github-auth-stdin` option.
+* For testing purposes you can pass the `--github-auth-stdin` command-line option and supply a temporary token via standard input.
 
 When you have decided on the most secure and reliable method for your configuration, run `codeql github upload-results` on each SARIF results file and include `--github-auth-stdin` unless the token is available in the environment variable `GITHUB_TOKEN`.
 
@@ -82,13 +82,11 @@ The following example uploads results from the SARIF file `temp/example-repo-js.
 codeql github upload-results \
     --repository=my-org/example-repo \
     --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
-    --sarif=/temp/example-repo-js.sarif {% ifversion ghes %}--github-url={% data variables.command_line.git_url_example %} \
+    --sarif=/temp/example-repo-js.sarif {% ifversion ghes %}--github-url=https://HOSTNAME \
     {% endif %}
 ```
 
 There is no output from this command unless the upload was unsuccessful. The command prompt returns when the upload is complete and data processing has begun. On smaller codebases, you should be able to explore the {% data variables.product.prodname_code_scanning %} alerts in {% data variables.product.product_name %} shortly afterward. You can see alerts directly in the pull request or on the **Security** tab for branches, depending on the code you checked out. For more information, see "[AUTOTITLE](/code-security/code-scanning/managing-code-scanning-alerts/triaging-code-scanning-alerts-in-pull-requests)" and "[AUTOTITLE](/code-security/code-scanning/managing-code-scanning-alerts/managing-code-scanning-alerts-for-your-repository)."
-
-{% ifversion code-scanning-tool-status-page %}
 
 ## Uploading diagnostic information to {% data variables.product.product_name %} if the analysis fails
 
@@ -118,9 +116,8 @@ You can make this diagnostic information available on the {% data variables.code
 codeql github upload-results \
     --repository=my-org/example-repo \
     --ref=refs/heads/main --commit=deb275d2d5fe9a522a0b7bd8b6b6a1c939552718 \
-    --sarif=/temp/example-repo-js.sarif {% ifversion ghes %}--github-url={% data variables.command_line.git_url_example %} \
+    --sarif=/temp/example-repo-js.sarif {% ifversion ghes %}--github-url=https://HOSTNAME \
     {% endif %}
 ```
 
 This is the same as the process for uploading SARIF files from successful analyses.
-{% endif %}

@@ -24,6 +24,10 @@ Once you complete this project, you should understand how to build your own comp
 
 {% data reusables.actions.context-injection-warning %}
 
+### Composite actions and reusable workflows
+
+Composite actions allow you to collect a series of workflow job steps into a single action which you can then run as a single job step in multiple workflows. Reusable workflows provide another way of avoiding duplication, by allowing you to run a complete workflow from within other workflows. For more information, see "[AUTOTITLE](/actions/using-workflows/avoiding-duplication)."
+
 ## Prerequisites
 
 Before you begin, you'll create a repository on {% data variables.location.product_location %}.
@@ -150,7 +154,7 @@ Before you begin, you'll create a repository on {% data variables.location.produ
 
 The following workflow code uses the completed hello world action that you made in "[AUTOTITLE](/actions/creating-actions/creating-a-composite-action#creating-an-action-metadata-file)".
 
-Copy the workflow code into a `.github/workflows/main.yml` file in another repository, but replace `actions/hello-world-composite-action@v1` with the repository and tag you created. You can also replace the `who-to-greet` input with your name.
+Copy the workflow code into a `.github/workflows/main.yml` file in another repository, replacing `OWNER` and `TAG` with the repository owner and the tag you created, respectively. You can also replace the `who-to-greet` input with your name.
 
 ```yaml copy
 on: [push]
@@ -162,7 +166,7 @@ jobs:
     steps:
       - uses: {% data reusables.actions.action-checkout %}
       - id: foo
-        uses: actions/hello-world-composite-action@v1
+        uses: OWNER/hello-world-composite-action@TAG
         with:
           who-to-greet: 'Mona the Octocat'
       - run: echo random-number "$RANDOM_NUMBER"
@@ -177,6 +181,6 @@ From your repository, click the **Actions** tab, and select the latest workflow 
 
 You can find many examples of composite actions on {% data variables.product.prodname_dotcom_the_website %}.
 
-- [microsoft/action-python](https://github.com/microsoft/action-python)
-- [microsoft/gpt-review](https://github.com/microsoft/gpt-review)
-- [tailscale/github-action](https://github.com/tailscale/github-action)
+* [microsoft/action-python](https://github.com/microsoft/action-python)
+* [microsoft/gpt-review](https://github.com/microsoft/gpt-review)
+* [tailscale/github-action](https://github.com/tailscale/github-action)

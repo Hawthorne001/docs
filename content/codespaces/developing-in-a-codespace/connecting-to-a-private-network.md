@@ -20,16 +20,16 @@ By default, your codespaces have access to all resources on the public internet,
 ## Connecting to resources on a private network
 
 There are currently two methods of accessing resources on a private network within {% data variables.product.prodname_github_codespaces %}.
-- Using a {% data variables.product.prodname_cli %} extension to configure your local machine as a gateway to remote resources.
-- Using a VPN.
+* Using a {% data variables.product.prodname_cli %} extension to configure your local machine as a gateway to remote resources.
+* Using a VPN.
 
 ### Using the GitHub CLI extension to access remote resources
 
-{% note %}
+{% warning %}
 
-**Note**: The {% data variables.product.prodname_cli %} extension is currently in beta and subject to change.
+**Warning**: The {% data variables.product.prodname_cli %} extension is deprecated and no longer supported.
 
-{% endnote %}
+{% endwarning %}
 
 The {% data variables.product.prodname_cli %} extension allows you to create a bridge between a codespace and your local machine, so that the codespace can access any remote resource that is accessible from your machine. The codespace uses your local machine as a network gateway to reach those resources. For more information, see "[Using {% data variables.product.prodname_cli %} to access remote resources](https://github.com/github/gh-net#codespaces-network-bridge)."
 
@@ -43,7 +43,7 @@ There are also a number of third party solutions that, while not explicitly endo
 
 These third party solutions include:
 
-- [Tailscale](https://tailscale.com/kb/1160/github-codespaces/)
+* [Tailscale](https://tailscale.com/kb/1160/github-codespaces/)
 
 ### Allowlisting private resources for codespaces
 
